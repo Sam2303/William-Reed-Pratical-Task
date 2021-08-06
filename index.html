@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>William Reed Youtube Task</title>
+    <script src="https://apis.google.com/js/api.js"></script>
+</head>
+<body>
+
+    <div class="wrapper">
+    <header class="main-header">
+        <h1 >Latest Videos</h1>
+        <a href="allVids.html" style= "color:#f3f3f3; text-decoration: underline; top:2%; right:2%; position: absolute;">All Videos</a>
+    </header>
+    
+    <div id="divContainer"></div>
+        <div id="container" class="container0">
+            <iframe id="vid0" frameborder=0 allowfullscreen></iframe>
+            <h2 id="title0"></h2>
+            <p id="description0"></p>
+        </div>
+        <div id="container" class="container1">
+            <iframe id="vid1" frameborder=0 allowfullscreen></iframe>
+            <h2 id="title1"></h2>
+        </div>
+        <div id="container" class="container2">
+            <iframe id="vid2" frameborder=0 allowfullscreen></iframe>
+            <h2 id="title2"></h2>
+        </div>
+        <div id="container" class="container3">
+            <iframe id="vid3" frameborder=0 allowfullscreen></iframe>
+            <h2 id="title3"></h2>
+        </div>
+        <div id="container" class="container4">
+            <iframe id="vid4" frameborder=0 allowfullscreen></iframe>
+            <h2 id="title4"></h2>
+        </div>
+    </div>
+</div>
+    
+
+
+    <script>
+        window.onload = () =>{
+            loadClient().then(execute)
+        }
+        // Sets up the API key so the execute function works properly
+        function loadClient() {
+            gapi.client.setApiKey("AIzaSyD_CrGM6fxgU_gl6Q9gXyHPHY0r4lB_zkk");
+            return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+        }
+        // GET from youtube of the playlist uploads from Google Developer Youtube Channel
+        function execute() {
+            return gapi.client.youtube.playlistItems.list({
+            "part": [
+                "snippet,contentDetails"
+            ],
+            "maxResults": 5,
+            "playlistId": "UUAuUUnT6oDeKwE6v1NGQxug"
+            })
+                .then(function(response) {
+                        // Handle the results here (response.result has the parsed body).
+                        getVideos(response)
+                    },
+                    function(err) { console.error("Execute error", err); });
+        }
+        gapi.load("client:auth2", function() {
+            gapi.auth2.init({client_id: "388701389298-la52k9nhrjc7spsfqhivq82268ic8kb6.apps.googleusercontent.com"});
+        });
+
+
+        function getVideos(response){
+
+            const vidArray = response.result.items;
+            for (let i = 0; i < vidArray.length; i++){
+                let iframe = document.getElementById("vid"+i);
+                iframe.src = "https://youtube.com/embed/"+ response.result.items[i].contentDetails.videoId;
+                iframe.title = response.result.items[i].snippet.title;  
+
+                let title = document.getElementById("title"+i);
+                title.innerText = response.result.items[i].snippet.title;
+            }
+            let latestUploadDescription = document.getElementById('description0');
+            latestUploadDescription.innerHTML = response.result.items[0].snippet.description;
+            latestUploadDescription.innerText = truncateText('p', 200);
+
+
+        }
+
+        function truncateText(selector, maxLength) {
+            var element = document.querySelector(selector),
+                truncated = element.innerText;
+
+            if (truncated.length > maxLength) {
+                truncated = truncated.substr(0,maxLength) + '...';
+            }
+            return truncated;
+        }
+
+
+
+    </script>
+    <style>
+        body{
+            background: #301934;
+            color: #f3f3f3;
+            font-size: 120%;
+        }
+        h1{
+            left: 2%;
+        }
+
+       h2{
+            text-decoration: underline;
+            text-align: center;
+        }
+        @media (max-width:800px){
+        #container{
+            width: 80%;
+            margin: 2% 10%
+        }
+
+        #container iframe{
+            width: 100%;
+            height: 100%;
+        }
+        #container p{
+            visibility: hidden;
+        }
+    }
+
+        .main-header{grid-area:header;}
+        .container0{grid-area:mainVideo;}
+        .container1{grid-area:video1;}
+        .container2{grid-area:video2;}
+        .container3{grid-area:video3;}
+        .container4{grid-area:video4;}
+        .container5{grid-area:video5;}
+
+
+        @media (min-width: 800px) {
+            .wrapper{
+                display:grid;
+                gap:3%;
+                grid-template-rows: 5% 50% 50% 50%;
+                grid-template-columns: 45% 45%;
+                grid-template-areas:
+                    "header header"
+                    "mainVideo video1"
+                    "video2 video3"
+                    "video4 video5";
+                text-align: center;
+
+            }
+            #container iframe{
+                width: 80%;
+                height: 60%;
+                margin: 0 10%
+            }
+            #container p{
+                visibility: hidden;
+         }
+        }
+
+        @media (min-width:1000px){
+            .wrapper{
+                display:grid;
+                gap: 5%;
+                grid-template-columns: 50% 20% 20%;
+                grid-template-rows: 10% 50% 50%;
+                grid-template-areas: 
+                "header header header"
+                "mainVideo video1 video2"
+                "mainVideo video3 video4"
+            }
+            
+            #container iframe{
+                width: 100%;
+                height: 70%;
+                margin:0;
+            }
+            #container p{
+                visibility:visible;
+         }
+        }
+
+    </style>
+</body>
+</html>
