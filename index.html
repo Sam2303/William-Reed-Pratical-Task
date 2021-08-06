@@ -71,7 +71,6 @@
 
 
         function getVideos(response){
-
             const vidArray = response.result.items;
             for (let i = 0; i < vidArray.length; i++){
                 let iframe = document.getElementById("vid"+i);
@@ -116,18 +115,23 @@
             text-align: center;
         }
         @media (max-width:800px){
-        #container{
-            width: 80%;
-            margin: 2% 10%
-        }
+        
+            h2{
+                font-size: 100%;
+            }
 
-        #container iframe{
-            width: 100%;
-            height: 100%;
-        }
-        #container p{
-            visibility: hidden;
-        }
+            #container{
+                width: 80%;
+                margin: 2% 10%
+            }
+
+            #container iframe{
+                width: 100%;
+                height: 100%;
+            }
+            #container p{
+                visibility: hidden;
+            }
     }
 
         .main-header{grid-area:header;}
